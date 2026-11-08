@@ -1,0 +1,74 @@
+
+services:
+
+  # =====================================
+  # SERVICIO 1 - API PRINCIPAL
+  # =====================================
+  servicio-1:
+    container_name: contenedor-servicio-1
+
+    build:
+      context: .
+      dockerfile: docker/servicio-1/Dockerfile
+
+    ports:
+      - "5000:5000"
+
+    networks:
+      - red-integracion
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # =====================================
+  # SERVICIO 2 - API CONSUMIDORA
+  # =====================================
+  servicio-2:
+    container_name: contenedor-servicio-2
+
+    build:
+      context: .
+      dockerfile: docker/servicio-2/Dockerfile
+
+    ports:
+      - "5001:5001"
+
+    environment:
+      SERVICIO_1_URL: http://servicio-1:5000
+
+    networks:
+      - red-integracion
+
+    depends_on:
+      servicio-1:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5001/health')"
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+# =====================================
+# RED DE COMUNICACIÓN
+# =====================================
+networks:
+  red-integracion:
+    driver: bridge

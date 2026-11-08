@@ -1,0 +1,72 @@
+
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+  pull_request:
+    branches:
+      - main
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  docker-ci:
+    name: Build and Test Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Verificar Docker
+      - name: Verify Docker installation
+        run: |
+          docker --version
+          docker compose version
+
+      # 3. Validar configuración Docker Compose
+      - name: Validate Docker Compose
+        run: |
+          docker compose config -q
+
+      # 4. Construir imágenes
+      - name: Build Docker images
+        run: |
+          docker compose build
+
+      # 5. Ejecutar los contenedores
+      - name: Start Docker containers
+        run: |
+          docker compose up -d
+
+      # 6. Verificar contenedores activos
+      - name: Verify running containers
+        run: |
+          docker compose ps
+
+          RUNNING=$(docker compose ps --services --status running | wc -l)
+
+          if [ "$RUNNING" -lt 2 ]; then
+            echo "ERROR: No se encuentran activos los dos servicios requeridos."
+            exit 1
+          fi
+
+          echo "SUCCESS: Los dos contenedores están ejecutándose."
+
+      # 7. Mostrar registros
+      - name: Show container logs
+        if: always()
+        run: |
+          docker compose logs || true
+
+      # 8. Limpiar entorno
+      - name: Cleanup containers
+        if: always()
+        run: |
+          docker compose down -v || true

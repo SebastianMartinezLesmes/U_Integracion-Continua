@@ -1,0 +1,9 @@
+{
+  "estado": "Exitoso",
+  "servicio_origen": "Servicio 2",
+  "servicio_destino": "Servicio 1",
+  "respuesta_servicio_1": {
+    "mensaje": "Hola desde el Servicio 1",
+    "respuesta": "Comunicación entre contenedores exitosa"
+  }
+}
