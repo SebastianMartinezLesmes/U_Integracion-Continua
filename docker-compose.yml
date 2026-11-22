@@ -44,7 +44,7 @@ services:
       - "5001:5001"
 
     environment:
-      SERVICIO_1_URL: http://servicio-1:5000
+      SERVICIO_1_URL: "http://servicio-1:5000"
 
     networks:
       - red-integracion
