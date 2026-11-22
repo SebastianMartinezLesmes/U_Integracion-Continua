@@ -7,7 +7,18 @@
   <img src="https://img.shields.io/badge/GitHub-Repositorio-181717?style=for-the-badge&logo=github" alt="GitHub">
   <img src="https://img.shields.io/badge/Estado-Exitoso-success?style=for-the-badge" alt="Estado exitoso">
 </p>
+---
 
+### Índice de navegación
+
+| Documento | Descripción | Acceso |
+|---|---|---|
+| README principal | Descripción general del proyecto, arquitectura, tecnologías y estructura. | [README.md](./README.md) |
+| Documentación 1 | Primera documentación del proyecto. | [Ver documentación 1](./Docs/Documentacion_1.md) |
+| Documentación 2 | Segunda documentación del proyecto. | [Ver documentación 2](./Docs/Documentacion_2.md) |
+| Documentación 3 | Tercera documentación del proyecto. | [Ver documentación 3](./Docs/Documentacion_3.md) |
+
+---
 ## 1. Introducción
 
 La primera entrega del proyecto universitario de Integración Continua tiene como propósito implementar una arquitectura basada en contenedores Docker, permitiendo la ejecución independiente de dos servicios de software y estableciendo una comunicación entre ellos.
