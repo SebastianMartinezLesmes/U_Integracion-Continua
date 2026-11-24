@@ -4,6 +4,7 @@ pipeline {
 
     options {
         timestamps()
+        disableConcurrentBuilds()
     }
 
     stages {
@@ -34,7 +35,7 @@ pipeline {
 
         stage('Ejecucion') {
             steps {
-                echo 'Iniciando servicios'
+                echo 'Iniciando servicios sin eliminar contenedores existentes'
                 sh 'docker compose up -d --wait'
             }
         }
@@ -55,20 +56,29 @@ pipeline {
                 '''
             }
         }
+
+        stage('Verificacion final') {
+            steps {
+                echo 'Verificando que los contenedores permanezcan activos'
+                sh 'docker compose ps'
+            }
+        }
     }
 
     post {
         success {
             echo 'Integracion continua completada correctamente'
+            echo 'Los contenedores permanecen activos'
         }
 
         failure {
             echo 'Se produjo un error en el pipeline'
+            echo 'Los contenedores no seran eliminados automaticamente'
         }
 
         always {
-            echo 'Finalizando ejecucion y limpiando contenedores'
-            sh 'docker compose down --remove-orphans || true'
+            echo 'Finalizando pipeline sin detener ni eliminar contenedores'
+            sh 'docker compose ps'
         }
     }
 }
